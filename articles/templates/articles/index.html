@@ -46,8 +46,10 @@
           {{ article.up_count }}</cell2>
         <cell2>
           {{ article.count }}</cell2>
-        <div>
-          {{ article.created_at|date:"y-m-d m:s" }}</div>
+        <!-- <div> {{ article.created_at|date:"y-m-d m:s" }} </div> -->
+        <div class='date-div'>
+          {{ article.test }}
+        </div>
       </div>
     {% endfor %}
   </section>

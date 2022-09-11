@@ -18,6 +18,12 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def 날짜이쁘게(self,date):
+        return date.strftime("%Y/%m/%d/ %H:%M:%S")
+    
+    def 욕필터(self,str):
+        return str.replace("씨팔","**")
+
 
 class Comment(models.Model):
     username = models.CharField(default='익명',max_length=50)
@@ -26,6 +32,9 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Upcheck(models.Model):
+    username = models.CharField(default='익명',max_length=50)
+    article_id = models.IntegerField(default=0)
 
 
 

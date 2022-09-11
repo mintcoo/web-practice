@@ -16,12 +16,11 @@
       작성시간 :{{ article.created_at }}</p>
     <p>
       수정시간 :{{ article.updated_at }}</p>
-    <form action="{% url 'articles:upcount' article.pk %}" method="POST">
-      {% csrf_token %}
-      <button>개추</button>
-      :
-      {{ article.up_count }}
-    </form>
+
+    <button type="button" data-bs-toggle="modal" data-bs-target="#upcheck">개추</button>
+    :
+    {{ article.up_count }}
+
   </section>
   <hr>
   {% for comment in comments reversed %}
@@ -49,5 +48,27 @@
       <button>삭제</button>
     </form>
     <a href="{% url 'articles:index' %}">Back</a>
+  </div>
+  <!--modal-->
+  <div class="modal fade" id="upcheck" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">추천?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          추천할래?
+        </div>
+        <div class="modal-footer">
+          <form action="{% url 'articles:upcount' article.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">추천</button>
+          </form>
+
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">안누름</button>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock content %}
