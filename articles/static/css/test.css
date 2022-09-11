@@ -1,0 +1,77 @@
+/* 여기파일이 css */
+.searchinput {
+  width: 450px;
+  border-radius: 50px;
+  border-color: white;
+  border: none;
+}
+.test-box{
+  /* border:solid 1px red!important; */
+}
+
+.searchinput2 {
+  width: 530px;
+  height: 40px;
+  border-radius: 50px;
+  border-color: white;
+  background-color: white;
+  display: flex; align-items: center;
+  
+}
+.searchinput2:hover {
+  border:solid 1px black;
+}
+
+.bg-container {
+  height: 800px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; 
+
+}
+
+.bg-container2 {
+  height: 800px;
+  display: flex; justify-content: center; 
+
+}
+
+
+.bg-container img{
+  margin: 0 10px; width: 20px;
+}
+
+.inputdiv {
+  margin: 10px 0;
+
+}
+
+/*****
+ 저 버튼이든뭐든 저런 <TagName>이런식으로 된것들을 Element(엘리먼트)라고하는데
+ 엘리먼트의 마우스를 올렷을떄라는 조건을 css에서는
+ element:hover로 표현함
+***/
+
+
+
+.inputbox {
+
+  width: 110px;
+  height: 36px;
+  font-size: 14px;
+  border-color: white;
+}
+
+.inputbox2 {
+  width: 142px;
+  height: 36px;
+  font-size: 14px;
+  border-color: transparent;
+}
+.inputbox:hover{
+  border-color: black;
+  
+}
+.inputbox2:hover{
+  border-color: black;
+  
+}
+/* 이런식으로 여기서 정의다끝내는식으로 아 오키도키오키도키 */

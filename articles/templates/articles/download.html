@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <!-- Button trigger modal -->
+  <div id="test">그냥 버튼테스트좀할꼐</div>
+  <script>
+    document
+      .querySelector('#test')
+      .addEventListener('click', () => {
+        const result = confirm("버튼 눌럿는데 답변");
+        console.log(result);
+      })
+  </script>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <img src="{% static 'img/ssafy.png' %}" width="50%" alt="image"/>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/oahQJAPtNHA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+  <hr>
+  <a download="download" href="{% static 'ssafy.png' %}">
+    download 1 tab1 tab2 tab3 tab4
+  </a>
+  <a href="{% url 'articles:index' %}">돌아가기</a>
+{% endblock content %}

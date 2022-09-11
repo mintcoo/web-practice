@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <h1>전체게시판</h1>
+  <section>
+    <div class="oneline-head">
+      <cell>
+        ID
+      </cell>
+      <cell>
+        구분
+      </cell>
+      <div class="divtitle">
+        내용
+      </div>
+      <cell>
+        글쓴이
+      </cell>
+      <cell>
+        조회
+      </cell>
+      <cell>
+        날짜
+      </cell>
+    </div>
+    {% for article in articles reversed %}
+      <div class="oneline">
+        <cell>
+          {{ article.pk }}
+        </cell>
+        <cell>
+          {{ article.header }}
+        </cell>
+        <div class="divtitle">
+          <a href="{% url 'articles:detail' article.pk %}">
+            {{ article.title }}
+          </div>
+        </a>
+
+        <cell>
+          {{ article.username }}</cell>
+
+        <cell>
+          {{ article.count }}</cell>
+        <div>
+          {{ article.created_at|date:"y-m-d m:s" }}</div>
+      </div>
+    {% endfor %}
+  </section>
+{% endblock content %}
