@@ -112,7 +112,14 @@ def comment(request, article_pk):
         comment.article_id = article_pk
         comment.save()
         return redirect('articles:detail', article.pk)
+    return redirect('articles:detail', article.pk)
 
-
+def upcount(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    if request.method == 'POST':
+        article.up_count += 1
+        article.save()
+        return redirect('articles:detail', article.pk)
+    return redirect('articles:detail', article.pk)
 
 

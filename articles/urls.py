@@ -11,6 +11,7 @@ urlpatterns = [
     # path('<int:article_pk>/edit/', views.edit, name='edit'),
     path('<int:article_pk>/update/', views.update, name='update'),
     path('<int:article_pk>/comment', views.comment, name='comment'),
+    path('<int:article_pk>/upcount', views.upcount, name='upcount'),
     
 
     path('download/', views.download, name='download'),

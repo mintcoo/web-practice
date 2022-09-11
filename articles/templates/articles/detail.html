@@ -16,7 +16,12 @@
       작성시간 :{{ article.created_at }}</p>
     <p>
       수정시간 :{{ article.updated_at }}</p>
-
+    <form action="{% url 'articles:upcount' article.pk %}" method="POST">
+      {% csrf_token %}
+      <button>개추</button>
+      :
+      {{ article.up_count }}
+    </form>
   </section>
   <hr>
   {% for comment in comments reversed %}

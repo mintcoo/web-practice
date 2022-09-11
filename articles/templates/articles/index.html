@@ -16,9 +16,12 @@
       <cell>
         글쓴이
       </cell>
-      <cell>
+      <cell2>
+        추천
+      </cell2>
+      <cell2>
         조회
-      </cell>
+      </cell2>
       <cell>
         날짜
       </cell>
@@ -39,9 +42,10 @@
 
         <cell>
           {{ article.username }}</cell>
-
-        <cell>
-          {{ article.count }}</cell>
+        <cell2>
+          {{ article.up_count }}</cell2>
+        <cell2>
+          {{ article.count }}</cell2>
         <div>
           {{ article.created_at|date:"y-m-d m:s" }}</div>
       </div>
