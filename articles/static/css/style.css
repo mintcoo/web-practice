@@ -69,6 +69,27 @@ h1 {
   font-size: 23px;
 }
 
+.oneline-page {
+  display: flex; justify-content: center; align-items: center;
+  height: 35px;
+  margin-top: 50px;
+  font-family: 'Cute Font';
+  font-size: 23px;
+}
+
+.pagebox {
+  width: 40px;
+  margin-left: 1px;
+  margin-right: 1px;
+  text-align: center;
+  border-color: antiquewhite;
+  background-color: rgb(255, 231, 255);
+}
+
+.pagebox:hover {
+  border:solid 1px antiquewhite;
+}
+
 cell {
   width: 125px;
   padding-left: 10px;

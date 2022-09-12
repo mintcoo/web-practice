@@ -52,7 +52,7 @@
         </div>
       </div>
     {% endfor %}
-    {% for article in articles reversed %}
+    {% for article in articles %}
       <div class="oneline">
         <cell>
           {{ article.pk }}
@@ -78,5 +78,17 @@
         </div>
       </div>
     {% endfor %}
+    <footer class="oneline-page">
+      {% for pag in range %}
+        <form href="{% url 'articles:index' %}">
+          <input class="pagebox" type="submit" name="page" value="{{ pag }}">
+        </form>
+        {% if %}
+          <form href="{% url 'articles:index' %}">
+            <input class="pagebox" type="submit" name="page" value="{{ pag }}">
+          </form>
+        {% endif %}
+      {% endfor %}
+    </footer>
   </section>
 {% endblock content %}

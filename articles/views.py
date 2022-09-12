@@ -9,7 +9,26 @@ from .models import Article, Comment, Upcheck
 
 # Create your views here.
 def index(request):
-    articles = Article.objects.all()
+    page = int(request.GET.get('page', 1))
+    print('@!#@@@@@',page)
+    page_size = 10
+    page_end = page * page_size
+    page_start = page_end - page_size
+    paginations = (len(Article.objects.all()) // page_size) +1
+    paginations_size = 4
+    interval = (page // paginations_size) * (paginations_size-1)
+    # print('&&$$$$$$$$$$$$$$$$',paginations)
+    articles = Article.objects.all()[::-1]
+    articles = articles[page_start:page_end]
+
+    for article in articles:
+        # article.test = article.날짜이쁘게(article.created_at)
+        article.title = article.욕필터(article.title)
+        if article.comment_count == 0:
+            article.comment_count = ''
+        else:
+             article.comment_count = f' [{ article.comment_count}]'
+
     article_popular = Article.objects.all().order_by('-up_count')[:3]  
 
     for popular in article_popular:
@@ -19,56 +38,11 @@ def index(request):
         else:
              popular.comment_count = f' [{ popular.comment_count}]'
 
-    for article in articles:
-        # 저기좀 다듬으면 ㅈ깔금ㅁ하게가능 아 이거 저 찾으면서 strftime 이거는 계속봤는데 이게 이렇게쓰면되는구나
-        # ㅇㅇ 글고 아까 이거또 응용하면
-        # print(article.created_at.time())
-        # "2022-09-10 08:11:19.688436" -> 이시간을 타임스탬프화시키면
-        # 53258902385902308 뭐이런게되는데
-        # 이걸 
-        # 하루만큼뺴는구나! ㅇㅋ 
-        # 근데 1980부터 흐른거라햇자늠? millisecond단위고
-        # 그럼 
 
-        # A시간: 1초전
-        # B시간: 10초전
-
-        # A시간 - B시간은 몇일거같음?9인데 millisoecnd900ㅇ0ㅋ
-        # 그럼
-        # 두시간차의 값이 하루면 몇이되야할거같음?
-        # 1분이면 몇일거같음? 저거 영그님 900맞나 ㅇㅇ1000이 1초니까
-        # ㅇㅇ 그래서 1분이면 몇임60000
-        # 정답! 1000 * 60
-        # 1분 1000 * 60
-        # 한시간 = 60분 = 1000* 60 * 60
-        # 하루 = 1000 * 60 * 60 * 24
-        # 이해됨? ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-        # Article에는 글쓴시간이있음 
-        # Article.createdAt 
-        # 그리고 첫페이지목록접근하면 파이썬에선 time.time하면 현재시간얻을수있음
-        # 그렇다면
-        # 글쓴시간 A
-        # 현재시간 B
-
-        # B-A >= 1000 * 60 * 60 * 24 =>하루이상차이
-        # B-A < 1000 * 60 * 60 * 24 => 하루이내캬
-        # 근데 이게 원리인거고 무족권이해를해야되서설명한거고 이걸
-        # 이제 사람들이 편하게쓰려고 라이브러리화를함
-        # 그게이제 어디선가봣을법한
-        # day(뭐이딴거일듯) 이런식으로아닐테지만 아무튼 시간입력하면
-        # 차이구해줌 하루같은거 그거를 찾으면됨 이제 원리가 저렇게되는구나
-
-        #이런식 와 이게또 이프문으로 처리가되네 와 이게 결합이 장난아니다
-        # article.test = article.날짜이쁘게(article.created_at)
-        article.title = article.욕필터(article.title)
-        if article.comment_count == 0:
-            article.comment_count = ''
-        else:
-             article.comment_count = f' [{ article.comment_count}]'
-             
     context ={
         'articles': articles,
         'article_popular': article_popular,
+        'range': range(interval + 1, paginations),
     }
     
     return render(request, 'articles/index.html', context)
