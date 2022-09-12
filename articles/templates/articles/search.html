@@ -26,32 +26,6 @@
         날짜
       </cell2>
     </div>
-    {% for popular in article_popular %}
-      <div class="oneline-popluar">
-        <cell>
-          {{ popular.pk }}
-        </cell>
-        <cell>
-          {{ popular.header }}
-        </cell>
-        <div class="divtitle">
-          <a href="{% url 'articles:detail' popular.pk %}">
-            {{ popular.title }}
-            {{ popular.comment_count }}
-          </div>
-        </a>
-
-        <cell>
-          {{ popular.username }}</cell>
-        <cell2>
-          {{ popular.up_count }}</cell2>
-        <cell2>
-          {{ popular.count }}</cell2>
-        <div>
-          {{ popular.created_at|date:"y-m-d m:s" }}
-        </div>
-      </div>
-    {% endfor %}
     {% for article in articles reversed %}
       <div class="oneline">
         <cell>

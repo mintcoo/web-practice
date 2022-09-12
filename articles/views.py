@@ -1,5 +1,6 @@
 
 from http.client import HTTPResponse
+from queue import Empty
 from re import A
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,15 @@ from .models import Article, Comment, Upcheck
 # Create your views here.
 def index(request):
     articles = Article.objects.all()
-    
+    article_popular = Article.objects.all().order_by('-up_count')[:3]  
+
+    for popular in article_popular:
+        popular.title = popular.욕필터(popular.title)
+        if popular.comment_count == 0:
+            popular.comment_count = ''
+        else:
+             popular.comment_count = f' [{ popular.comment_count}]'
+
     for article in articles:
         # 저기좀 다듬으면 ㅈ깔금ㅁ하게가능 아 이거 저 찾으면서 strftime 이거는 계속봤는데 이게 이렇게쓰면되는구나
         # ㅇㅇ 글고 아까 이거또 응용하면
@@ -50,13 +59,18 @@ def index(request):
         # 차이구해줌 하루같은거 그거를 찾으면됨 이제 원리가 저렇게되는구나
 
         #이런식 와 이게또 이프문으로 처리가되네 와 이게 결합이 장난아니다
-        article.test = article.날짜이쁘게(article.created_at)
+        # article.test = article.날짜이쁘게(article.created_at)
         article.title = article.욕필터(article.title)
-
+        if article.comment_count == 0:
+            article.comment_count = ''
+        else:
+             article.comment_count = f' [{ article.comment_count}]'
+             
     context ={
         'articles': articles,
+        'article_popular': article_popular,
     }
-
+    
     return render(request, 'articles/index.html', context)
 
 # def new(request):
@@ -156,6 +170,8 @@ def comment(request, article_pk):
         comment.content = request.POST.get('comment')
         comment.article_id = article_pk
         comment.save()
+        article.comment_count += 1
+        article.save()
         return redirect('articles:detail', article.pk)
     return redirect('articles:detail', article.pk)
 
@@ -202,12 +218,24 @@ def upcount(request, article_pk):
     return redirect('articles:detail', article.pk)
 
     
+def search(request):
+    q = request.GET.get('q')
+    if q == '':
+        context = {
+        'q': q,
+        } 
+        return render(request, 'articles/modal.html', context)
 
+        
+    articles = Article.objects.filter(title__icontains=q) 
+    for article in articles:
+        article.title = article.욕필터(article.title)
+        if article.comment_count == 0:
+            article.comment_count = ''
+        else:
+             article.comment_count = f' [{ article.comment_count}]'
 
-# def upcheck(request, article_pk):
-#     upcheck = Upcheck.objects.get(article_id=article_pk)
-
-            # upcheck = Upcheck()
-            # upcheck.article_id = article.pk
-            # upcheck.username = request.user.username
-            # upcheck.save()
+    context = {
+        'articles': articles,
+    } 
+    return render(request, 'articles/search.html', context)

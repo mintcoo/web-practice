@@ -17,6 +17,7 @@
   </head>
 
   <body>
+
     <a href="{% url 'articles:test' %}">css연습</a>
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-light my-3" style="background-color: #e3f2fd;">
@@ -84,6 +85,11 @@
           </ul>
         </div>
       </nav>
+      <form action="{% url 'articles:search' %}">
+        <input class="searchinput" type="search" name="q">
+        <input class="searchbox" type="submit" value="검색">
+      </form>
+
       <div class="container">
         {% if request.user.is_authenticated %}
           <!-- Modal -->
