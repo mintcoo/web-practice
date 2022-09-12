@@ -80,15 +80,18 @@
     {% endfor %}
     <footer class="oneline-page">
       {% for pag in range %}
-        <form href="{% url 'articles:index' %}">
-          <input class="pagebox" type="submit" name="page" value="{{ pag }}">
-        </form>
-        {% if %}
+        {% if pag != 1 and pag == interval %}
+          <a style="margin-right: 10px;" href="?page={{ interval|add:-5}}">이전</a>
+        {% endif %}
+        {% if pag < interval_2 %}
           <form href="{% url 'articles:index' %}">
             <input class="pagebox" type="submit" name="page" value="{{ pag }}">
           </form>
+        {% elif pag == interval_2 %}
+          <a style="margin-left: 10px;" href="?page={{ interval|add:paginations_size }}">다음</a>
         {% endif %}
       {% endfor %}
+
     </footer>
   </section>
 {% endblock content %}

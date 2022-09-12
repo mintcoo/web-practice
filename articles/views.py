@@ -6,17 +6,20 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ArticleForm
 from .models import Article, Comment, Upcheck
-
+interval = 1
 # Create your views here.
 def index(request):
+    global interval
     page = int(request.GET.get('page', 1))
-    print('@!#@@@@@',page)
-    page_size = 10
+    page_size = 5
     page_end = page * page_size
     page_start = page_end - page_size
     paginations = (len(Article.objects.all()) // page_size) +1
-    paginations_size = 4
-    interval = (page // paginations_size) * (paginations_size-1)
+    paginations_size = 5
+    if page <= paginations_size:
+        interval = 1
+    if page != 1 and page % paginations_size == 1:
+        interval = page
     # print('&&$$$$$$$$$$$$$$$$',paginations)
     articles = Article.objects.all()[::-1]
     articles = articles[page_start:page_end]
@@ -42,7 +45,12 @@ def index(request):
     context ={
         'articles': articles,
         'article_popular': article_popular,
-        'range': range(interval + 1, paginations),
+        'range': range(interval, paginations + 1),
+        'interval': interval,
+        'interval_2': interval + paginations_size,
+        'paginations': paginations,
+        'paginations_size':paginations_size,
+
     }
     
     return render(request, 'articles/index.html', context)
