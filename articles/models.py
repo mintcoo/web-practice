@@ -39,5 +39,4 @@ class Upcheck(models.Model):
     article_id = models.IntegerField(default=0)
 
 
-
     

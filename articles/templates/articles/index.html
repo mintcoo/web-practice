@@ -81,7 +81,7 @@
     <footer class="oneline-page">
       {% for pag in range %}
         {% if pag != 1 and pag == interval %}
-          <a style="margin-right: 10px;" href="?page={{ interval|add:-5}}">이전</a>
+          <a style="margin-right: 10px;" href="?page={{ interval|add:-3}}">이전</a>
         {% endif %}
         {% if pag < interval_2 %}
           <form href="{% url 'articles:index' %}">

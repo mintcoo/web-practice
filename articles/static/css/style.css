@@ -138,3 +138,29 @@ a:hover {
   font-size: 20px;
 
 }
+
+.titlebox {
+  width: 600px;
+  border-radius: 10px;
+  border:solid 1px darkcyan;
+  outline: none;
+
+}
+
+.loginbox {
+  display: block;
+  height: 30px;
+  width: 250px;
+  border-radius: 10px;
+  border:solid 1px slateblue;
+  outline: none;
+
+}
+
+.passwordbox {
+  width: 130px;
+
+  border: solid 1px skyblue;
+  background-color: white;
+
+}

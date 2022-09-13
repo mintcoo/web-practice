@@ -13,6 +13,8 @@ urlpatterns = [
     path('<int:article_pk>/comment', views.comment, name='comment'),
     path('<int:article_pk>/upcount', views.upcount, name='upcount'),
     path('search/', views.search, name='search'),
+    path('pointshop/', views.pointshop, name='pointshop'),
+
 
     
 

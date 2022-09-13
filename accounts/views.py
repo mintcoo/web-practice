@@ -4,17 +4,17 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from accounts.forms import CustomUserChangeForm, CustomUserCreationForm
+from accounts.forms import CustomUserChangeForm, CustomUserCreationForm, CustomAuthenticationForm
 
 # Create your views here.
 def login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
+        form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
             return redirect('articles:index')
     else:
-        form = AuthenticationForm()
+        form = CustomAuthenticationForm()
     context = {
         'form': form,
     }
