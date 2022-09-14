@@ -41,6 +41,7 @@ class CustomUserChangeForm(UserChangeForm):
             "class": "loginbox"
         })
     )
+
     first_name = forms.CharField(
         label="",
         widget=forms.TextInput(attrs={

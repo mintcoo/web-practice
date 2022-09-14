@@ -39,4 +39,16 @@ class Upcheck(models.Model):
     article_id = models.IntegerField(default=0)
 
 
-    
+class Usericon(models.Model):
+    icon_id = models.IntegerField()
+    iconname = models.CharField(max_length=20)
+    url = models.TextField()
+
+class Profile(models.Model):
+    username = models.CharField(max_length=50)
+    icon_id = models.IntegerField(default=0)
+
+class Itembox(models.Model):
+    username = models.CharField(max_length=50)
+    icon_id = models.IntegerField(default=0)
+

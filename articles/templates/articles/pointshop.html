@@ -2,8 +2,12 @@
 {% load static %}
 {% block content %}
 
-  <img src="{% static 'img/ssafy.png' %}" width="50%" alt="image"/>
   <hr>
+  {% for icon in icons %}
+    {% if icon.icon_id != 0 %}
+      <img src="{% static icon.url %}" alt="icon"/>
+    {% endif %}
+  {% endfor %}
   <a download="download" href="{% static 'ssafy.png' %}">
     download 1 tab1 tab2 tab3 tab4
   </a>

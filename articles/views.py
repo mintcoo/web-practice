@@ -1,34 +1,34 @@
-from accounts.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ArticleForm
-from .models import Article, Comment, Upcheck
+from .models import Article, Comment, Upcheck, Usericon
 interval = 1
 # Create your views here.
 def index(request):
     global interval
-    page = int(request.GET.get('page', 1))
-    page_size = 10
-    page_end = page * page_size
+    page = int(request.GET.get('page', 1))                      # 요청 페이지를 받아올때 인트값으로, 디폴트 1
+    page_size = 10                                              # 보여줄 페이지의 개수
+    page_end = page * page_size                                 # 아래에서 게시글을 페이지개수만큼 자를 변수
     page_start = page_end - page_size
-    paginations = (len(Article.objects.all()) // page_size) +1
-    paginations_size = 3
-    if page <= paginations_size:
-        interval = 1
-    if page != 1 and page % paginations_size == 1:
-        interval = page
+    paginations = (len(Article.objects.all()) // page_size) +1  # 모든 게시글개수를 페이지 사이즈만큼 나누고 +1 만큼 페이지네이션 생성 
+    paginations_size = 3                                        # 페이지네이션 사이즈 (html에도 값 바꿔주어야함)
+    if page <= paginations_size:                                # 페이지네이션 사이즈 처리 구간 첫 1,2,3 구간일때
+        interval = 1                                            
+    if page != 1 and page % paginations_size == 1:              # 페이지가 1이아니고 페이지네이션 사이즈로 나눈 나머지 1일때 (즉 현재설정으론 4페이지)
+        interval = page                                         # 글로벌 interval을 page값으로 할당 (아래에 range범위 바꿔서 다시 렌더링 해야함)
     # print('&&$$$$$$$$$$$$$$$$',paginations)
     articles = Article.objects.all()[::-1]
-    articles = articles[page_start:page_end]
+    articles = articles[page_start:page_end]                    # 현재 페이지 사이즈 10개만큼 잘라서 렌더링해야함
 
     for article in articles:
         # article.test = article.날짜이쁘게(article.created_at)
         article.title = article.욕필터(article.title)
         if article.comment_count == 0:
-            article.comment_count = ''
+            article.comment_count = ''          # 코멘트 0 이면 빈칸 
         else:
-             article.comment_count = f' [{ article.comment_count}]'
+             article.comment_count = f' [{ article.comment_count}]'    
 
+    # 인기글 정렬하는거 order_by를 통해 정렬 '-'을 통해 많은순
     article_popular = Article.objects.all().order_by('-up_count')[:3]  
 
     for popular in article_popular:
@@ -42,10 +42,9 @@ def index(request):
     context ={
         'articles': articles,
         'article_popular': article_popular,
-        'range': range(interval, paginations + 1),
+        'range': range(interval, paginations + 1),                      # 여기 range를 전달함으로써 구간만큼 페이지네이션 버튼 생성
         'interval': interval,
         'interval_2': interval + paginations_size,
-        'paginations': paginations,
         'paginations_size':paginations_size,
 
     }
@@ -145,6 +144,7 @@ def comment(request, article_pk):
 
 def upcount(request, article_pk):
     article = Article.objects.get(pk=article_pk)
+    # 필터를 이용해 조건을 2개 걸었음! (특히 유저네임이 요청한 유저인지가 중요)
     upchecks = Upcheck.objects.filter(article_id=article_pk,username=request.user.username)
 
 
@@ -168,15 +168,15 @@ def upcount(request, article_pk):
 
     
 def search(request):
-    q = request.GET.get('q')
-    if q == '':
+    q = request.GET.get('q')                # 우선 사용자가 검색한 값 q에 담긴값을 받아온다
+    if q == '':                             # 빈칸을 검색했을때 처리
         context = {
         'q': q,
         } 
         return redirect('articles:index')
     
         
-    articles = Article.objects.filter(title__icontains=q) 
+    articles = Article.objects.filter(title__icontains=q)               # 필터로 icontains=q 를 통해서 검색한 q가 제목에 포함된것 전부가져옴
     for article in articles:
         article.title = article.욕필터(article.title)
         if article.comment_count == 0:
@@ -187,7 +187,12 @@ def search(request):
     context = {
         'articles': articles,
     } 
-    return render(request, 'articles/search.html', context)
+    return render(request, 'articles/search.html', context)             # 검색결과로 새로 렌더링
 
 def pointshop(request):
-    return render (request, 'articles/pointshop.html')
+    icons = Usericon.objects.all()
+    context = {
+        'icons': icons
+    }
+
+    return render (request, 'articles/pointshop.html', context)

@@ -50,7 +50,7 @@ def update(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
             return redirect('articles:index')
     else:
         form = CustomUserChangeForm(instance=request.user)
