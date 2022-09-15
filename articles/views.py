@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ArticleForm
 from .models import Article, Comment, Upcheck, Usericon
+from .context_processors import Profile
 interval = 1
 # Create your views here.
 def index(request):
@@ -27,6 +28,12 @@ def index(request):
             article.comment_count = ''          # 코멘트 0 이면 빈칸 
         else:
              article.comment_count = f' [{ article.comment_count}]'    
+    
+
+    # articles for문돌면서 거기에 profile꽂아주려함
+    # 그럼 기존 html쪽 for문에서 article.profile.icon_url하믄대니까
+    # print('aa',usernames)
+
 
     # 인기글 정렬하는거 order_by를 통해 정렬 '-'을 통해 많은순
     article_popular = Article.objects.all().order_by('-up_count')[:3]  
@@ -38,6 +45,27 @@ def index(request):
         else:
              popular.comment_count = f' [{ popular.comment_count}]'
 
+    #하는김에 lambda쓰는거조금씩이제 해봐야할듯
+    print(articles)
+    usernames = list(map(lambda article:article.username,list(articles)))
+    usernames2 = list(map(lambda popular:popular.username,list(article_popular)))
+    # 여기서 usernames로 profile끌어오면 profiles들어잇고
+    profiles = Profile.objects.filter(username__in=usernames)
+    profiles2 = Profile.objects.filter(username__in=usernames2)
+    
+
+    for article in articles:
+        # profiles이거안에 article.username이랑 profiles중의 profile.username이같은거 무족권있을꺼고
+        # 그걸 article.profile = profile 해서넣어준다는뜻 아 저는 데이터베이스에 지정한 필드값들만 이렇게 끌고올수있다고 생각하고있었음
+        # 그럴수도있어 이 모델객체를 나도모르니까 근데 아까 영그님이 그 머냐 profile 굳이 저장안하고 만드시는거처럼 당연히 이거될거같음!
+        for profile in profiles:
+            if profile.username == article.username :
+                article.profile = profile.icon_url
+
+    for article in article_popular:                 # 이 부분 다시 이해가 필요
+        for pro in profiles2:
+            if pro.username == article.username :
+                article.profile = pro.icon_url
 
     context ={
         'articles': articles,
@@ -45,7 +73,7 @@ def index(request):
         'range': range(interval, paginations + 1),                      # 여기 range를 전달함으로써 구간만큼 페이지네이션 버튼 생성
         'interval': interval,
         'interval_2': interval + paginations_size,
-        'paginations_size':paginations_size,
+        'paginations_size': paginations_size,
 
     }
     

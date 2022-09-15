@@ -48,11 +48,8 @@
           <ul class="navbar-nav ms-3 align-items-center">
             <li class="nav-item">
               <a class="nav-link" style="color: purple;">
-                {% comment %} {% for icon in icnos %}
-                  {% if icon.icon_id == 1 %}
-                    {% static icon.url %}
-                  {% endif %}
-                {% endfor %} {% endcomment %}
+                <img style="width: 20px; height: 20px;" src="{% static profile.icon_url %}" alt="icon"/>
+
                 {{ user }}
                 {% if request.user.is_authenticated %}
                   // Point:

@@ -5,7 +5,9 @@
   <hr>
   {% for icon in icons %}
     {% if icon.icon_id != 0 %}
-      <img src="{% static icon.url %}" alt="icon"/>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#iconmodal" class="btn btn-outline-primary padzero ">
+        <img src="{% static icon.url %}" alt="icon"/></button>
+
     {% endif %}
   {% endfor %}
   <hr>
@@ -13,4 +15,24 @@
     download 1 tab1 tab2 tab3 tab4
   </a>
   <a href="{% url 'articles:index' %}">돌아가기</a>
+  <div class="modal fade" id="iconmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            살래?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          떠나지마세요 ㅠㅠ
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">구매하기</button>
+          <form action="{% url 'articles:pointshop' %}">
+            <button type="submit" class="btn btn-primary">안살래</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
