@@ -43,6 +43,11 @@
         </a>
 
         <cell>
+          {% for profile in profiles %}
+            {% if profile.username == popular.username %}
+              <img src="{% static profile.icon_url %}" alt="icon"/>
+            {% endif %}
+          {% endfor %}
           {{ popular.username }}</cell>
         <cell2>
           {{ popular.up_count }}</cell2>
@@ -67,8 +72,12 @@
             {{ article.comment_count }}
           </div>
         </a>
-
         <cell>
+          {% for profile in profiles %}
+            {% if profile.username == article.username %}
+              <img src="{% static profile.icon_url %}" alt="icon"/>
+            {% endif %}
+          {% endfor %}
           {{ article.username }}</cell>
         <cell2>
           {{ article.up_count }}</cell2>

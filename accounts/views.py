@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from accounts.forms import CustomUserChangeForm, CustomUserCreationForm, CustomAuthenticationForm
+from articles.models import Profile
 
 # Create your views here.
 def login(request):
@@ -28,8 +29,11 @@ def logout(request):
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
+        profile = Profile()
         if form.is_valid():
             form.save()
+            profile.username = request.user.username
+            profile.save()
             return redirect('articles:index')
     else:
         form = CustomUserCreationForm()

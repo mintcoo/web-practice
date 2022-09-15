@@ -56,9 +56,12 @@ def create(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
+            article = form.save() # save()는 데이터에 저장도하는데 위에서 지정안하면 새로 객체도 만듬
+            article.username = request.user.username    # 따로해주는 이유는 지금 article.username은 디폴트값이 익명으로 되어있다
+            article.save()
             request.user.point += 300
             request.user.save()
-            article = form.save() # save()는 데이터에 저장도하는데 위에서 지정안하면 새로 객체도 만듬
+
             return redirect('articles:detail', article.pk)
     
     else:
@@ -77,7 +80,7 @@ def detail(request, article_pk):
     # => 객체임
 
     #수정후
-    article.username = request.user.username
+    # article.username = request.user.username
     article.count += 1
     article.save()
 

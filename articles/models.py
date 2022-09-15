@@ -43,10 +43,12 @@ class Usericon(models.Model):
     icon_id = models.IntegerField()
     iconname = models.CharField(max_length=20)
     url = models.TextField()
+    price = models.IntegerField(default=500)
 
 class Profile(models.Model):
     username = models.CharField(max_length=50)
     icon_id = models.IntegerField(default=0)
+    icon_url = models.TextField(default='icon/gunbbang.png')
 
 class Itembox(models.Model):
     username = models.CharField(max_length=50)
