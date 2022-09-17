@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ArticleForm
-from .models import Article, Comment, Upcheck, Usericon
+from .models import Article, Comment, Itembox, Upcheck, Usericon
 from .context_processors import Profile
 interval = 1
 # Create your views here.
@@ -45,10 +45,11 @@ def index(request):
         else:
              popular.comment_count = f' [{ popular.comment_count}]'
 
-    #하는김에 lambda쓰는거조금씩이제 해봐야할듯
-    print(articles)
-    usernames = list(map(lambda article:article.username,list(articles)))
-    usernames2 = list(map(lambda popular:popular.username,list(article_popular)))
+    #lambda쓰는거조금씩이제 해보자!!
+    usernames = list(map(lambda x:x.username,list(articles)))
+    usernames2 = list(map(lambda x:x.username,list(article_popular)))
+    # print('@@@',usernames)
+    # print('@@@',usernames2)
     # 여기서 usernames로 profile끌어오면 profiles들어잇고
     profiles = Profile.objects.filter(username__in=usernames)
     profiles2 = Profile.objects.filter(username__in=usernames2)
@@ -56,8 +57,7 @@ def index(request):
 
     for article in articles:
         # profiles이거안에 article.username이랑 profiles중의 profile.username이같은거 무족권있을꺼고
-        # 그걸 article.profile = profile 해서넣어준다는뜻 아 저는 데이터베이스에 지정한 필드값들만 이렇게 끌고올수있다고 생각하고있었음
-        # 그럴수도있어 이 모델객체를 나도모르니까 근데 아까 영그님이 그 머냐 profile 굳이 저장안하고 만드시는거처럼 당연히 이거될거같음!
+        # 그걸 article.profile = profile 해서넣어준다는뜻 데이터베이스에 지정한 필드값들만 이렇게 끌고올수있는게 아니다!
         for profile in profiles:
             if profile.username == article.username :
                 article.profile = profile.icon_url
@@ -221,9 +221,51 @@ def search(request):
     return render(request, 'articles/search.html', context)             # 검색결과로 새로 렌더링
 
 def pointshop(request):
-    icons = Usericon.objects.all()
+    icons = Usericon.objects.all().order_by('price')
+    itembox = Itembox.objects.filter(username=request.user.username)
+    user_icon_id = list(map(lambda x:x.icon_id, itembox))
+    print('@@@@',user_icon_id)
+
     context = {
-        'icons': icons
+        'icons': icons,
+        'useritems': user_icon_id,
     }
 
     return render (request, 'articles/pointshop.html', context)
+
+def icon_buy(request, icon_id, icon_price):
+    if request.method == 'POST':
+        request.user.point -= icon_price
+        request.user.save()
+        itembox = Itembox()
+        itembox.username = request.user.username
+        itembox.icon_id = icon_id
+        itembox.save()
+        return redirect('articles:pointshop')
+    else:
+        print('POST 요청아님')
+    return redirect('articles:pointshop')
+
+def profile(request):
+    icons = Usericon.objects.all()
+    itembox = Itembox.objects.filter(username=request.user.username)
+    # user_icon_list = list(map(lambda x:x.icon_id, itembox))
+    for icon in icons:
+        for item in itembox:
+            if item.icon_id == icon.icon_id:
+                item.url = icon.url
+    context = {
+        'iconlist': itembox,
+    }
+
+    return render(request, 'articles/profile.html', context)
+
+def icon_setting(request, icon_id):
+    if request.method == 'POST':
+        icon = Usericon.objects.get(icon_id=icon_id)
+        profile = Profile.objects.get(username=request.user.username)
+        profile.icon_id = icon_id
+        profile.icon_url = icon.url
+        profile.save()
+        print(profile.icon_id)
+        return redirect('articles:profile')

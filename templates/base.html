@@ -47,9 +47,8 @@
           </ul>
           <ul class="navbar-nav ms-3 align-items-center">
             <li class="nav-item">
-              <a class="nav-link" style="color: purple;">
+              <a href="{% url 'articles:profile' %}" class="nav-link" style="color: purple;">
                 <img style="width: 20px; height: 20px;" src="{% static profile.icon_url %}" alt="icon"/>
-
                 {{ user }}
                 {% if request.user.is_authenticated %}
                   // Point:

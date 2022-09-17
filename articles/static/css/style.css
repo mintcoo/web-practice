@@ -1,9 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Cute+Font:400');
+@import url('https://fonts.googleapis.com/css2?family=Blaka+Ink&display=swap');
 
 h1 {
   font-family: 'Cute Font';
   font-size: 60px;
+}
+.blaka {
+  font-family: 'Blaka Ink', cursive;
+  font-size: 50px;
+}
+
+.cutefont {
+  font-family: 'Cute Font';
+  font-size: 30px;
 }
 
 .insta {
@@ -15,6 +25,13 @@ h1 {
 .justify-space{
   display: flex; justify-content: space-between;
 }
+
+.justify-evenly{
+  display: flex; 
+  justify-content: space-evenly; 
+  align-items: center;
+}
+
 
 .padzero {
   --bs-btn-padding-y: .25rem; 
@@ -139,6 +156,19 @@ a:hover {
 
 }
 
+.purchasebox {
+  border: solid 2px skyblue;
+  background-color: white;
+  font-family: 'Cute Font';
+  font-size: 25px;
+  margin-left: 5px;
+
+}
+
+.purchasebox:hover {
+  border:solid 2px aquamarine;
+}
+
 .titlebox {
   width: 600px;
   border-radius: 10px;
@@ -162,5 +192,17 @@ a:hover {
 
   border: solid 1px skyblue;
   background-color: white;
+
+}
+
+.shopbox {
+  width: fit-content;
+  padding: inherit;
+  border-radius: 10px;
+  border:solid 1px darkcyan;
+  border-top: none;
+  border-bottom: none;
+  outline: none;
+  margin-bottom: 50px;
 
 }

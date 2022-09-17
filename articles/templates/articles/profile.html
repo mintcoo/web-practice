@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Profile</h1>
+  <hr>
+  {% for icon in iconlist %}
+    <div>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#iconsetting{{ icon.icon_id }}" class="btn btn-outline-primary padzero ">
+        <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/></button>
+    </div>
+
+    <div class="modal fade" id="iconsetting{{ icon.icon_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="justify-evenly">
+            <div>
+              <h5 class="modal-title" id="exampleModalLabel">
+                아이콘 장착할래?
+              </h5>
+            </div>
+          </div>
+          <hr>
+          <div class="modal-body justify-evenly">
+            <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/>
+            <div class="cutefont">
+              {{ icon.price }}
+
+            </div>
+          </div>
+          <div class="modal-footer justify-space">
+            <div class="d-flex justify-content-end">
+              <form action="{% url 'articles:icon_setting' icon.icon_id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="purchasebox">그랭</button>
+              </form>
+              <button type="button" class="purchasebox" data-bs-dismiss="modal">시러</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+
+{% endblock content %}

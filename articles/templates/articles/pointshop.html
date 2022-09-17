@@ -3,11 +3,57 @@
 {% block content %}
 
   <hr>
+  <h2 class="shopbox blaka">Icon Shop</h2>
   {% for icon in icons %}
     {% if icon.icon_id != 0 %}
-      <button type="button" data-bs-toggle="modal" data-bs-target="#iconmodal" class="btn btn-outline-primary padzero ">
-        <img src="{% static icon.url %}" alt="icon"/></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#iconmodal{{ icon.icon_id }}" class="btn btn-outline-primary padzero ">
+        <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/></button>
 
+      <div class="modal fade" id="iconmodal{{ icon.icon_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="d-flex justify-content-end">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="justify-evenly">
+              <div>
+                <h5 class="modal-title" id="exampleModalLabel">
+                  {{ icon.iconname }}
+                  아이콘
+                </h5>
+              </div>
+            </div>
+            <hr>
+            <div class="modal-body justify-evenly">
+              <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/>
+              <div class="cutefont">가격 :
+                {{ icon.price }}
+                point
+              </div>
+            </div>
+            <div class="modal-footer justify-space">
+              <div>
+                보유 :
+                {{ user.point }}
+                point
+              </div>
+              <div class="d-flex justify-content-end">
+                {% if user.point >= icon.price %}
+                  <form action="{% url 'articles:icon_buy' icon.icon_id icon.price %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="purchasebox">구매하기</button>
+                  </form>
+                  <button type="button" class="purchasebox" data-bs-dismiss="modal">안살래</button>
+                {% elif icon.icon_id in useritems %}
+                  <button type="button" class="purchasebox" data-bs-dismiss="modal">이미보유중</button>
+                {% elif user.point < icon.price %}
+                  <button type="button" class="purchasebox" data-bs-dismiss="modal">포인트부족ㅋ</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endif %}
   {% endfor %}
   <hr>
@@ -15,24 +61,5 @@
     download 1 tab1 tab2 tab3 tab4
   </a>
   <a href="{% url 'articles:index' %}">돌아가기</a>
-  <div class="modal fade" id="iconmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            살래?</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          떠나지마세요 ㅠㅠ
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">구매하기</button>
-          <form action="{% url 'articles:pointshop' %}">
-            <button type="submit" class="btn btn-primary">안살래</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+
 {% endblock content %}
