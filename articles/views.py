@@ -46,8 +46,8 @@ def index(request):
              popular.comment_count = f' [{ popular.comment_count}]'
 
     #lambda쓰는거조금씩이제 해보자!!
-    usernames = list(map(lambda x:x.username,list(articles)))
-    usernames2 = list(map(lambda x:x.username,list(article_popular)))
+    usernames = list(map(lambda x:x.username, articles))
+    usernames2 = list(map(lambda x:x.username, article_popular))
     # print('@@@',usernames)
     # print('@@@',usernames2)
     # 여기서 usernames로 profile끌어오면 profiles들어잇고
@@ -124,7 +124,7 @@ def detail(request, article_pk):
 def delete(request, article_pk):
     article = Article.objects.get(pk=article_pk)
     if request.user.is_authenticated:
-        if request.method == 'POST':
+        if request.method == 'POST' and request.user.username == article.username:
             article.delete()
             return redirect('articles:index')
     return redirect('articles:detail', article.pk)
@@ -220,11 +220,11 @@ def search(request):
     } 
     return render(request, 'articles/search.html', context)             # 검색결과로 새로 렌더링
 
+@login_required
 def pointshop(request):
     icons = Usericon.objects.all().order_by('price')
     itembox = Itembox.objects.filter(username=request.user.username)
     user_icon_id = list(map(lambda x:x.icon_id, itembox))
-    print('@@@@',user_icon_id)
 
     context = {
         'icons': icons,
@@ -233,6 +233,7 @@ def pointshop(request):
 
     return render (request, 'articles/pointshop.html', context)
 
+@login_required
 def icon_buy(request, icon_id, icon_price):
     if request.method == 'POST':
         request.user.point -= icon_price
@@ -246,6 +247,7 @@ def icon_buy(request, icon_id, icon_price):
         print('POST 요청아님')
     return redirect('articles:pointshop')
 
+@login_required
 def profile(request):
     icons = Usericon.objects.all()
     itembox = Itembox.objects.filter(username=request.user.username)
@@ -260,6 +262,7 @@ def profile(request):
 
     return render(request, 'articles/profile.html', context)
 
+@login_required
 def icon_setting(request, icon_id):
     if request.method == 'POST':
         icon = Usericon.objects.get(icon_id=icon_id)
