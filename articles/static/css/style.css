@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Cute+Font:400');
 @import url('https://fonts.googleapis.com/css2?family=Blaka+Ink&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Gamja+Flower:400');
+@import url('https://fonts.googleapis.com/css?family=Poor+Story:400');
+
+.gamjaflower { font-family: 'Gamja Flower';
+  font-size: 19px;
+}
+
+.poorstory { font-family: 'Poor Story';
+  font-size: 19px;
+}
+
 
 h1 {
   font-family: 'Cute Font';
@@ -24,6 +35,14 @@ h1 {
 
 .justify-space{
   display: flex; justify-content: space-between;
+}
+
+.justify-end{
+  display: flex; justify-content: end;
+}
+
+.justify-start{
+  display: flex; justify-content: start;
 }
 
 .justify-evenly{
@@ -121,6 +140,7 @@ cell2{
 .divtitle {
   width: 570px;
 }
+
 
 a {
   text-decoration: none; /* 링크의 밑줄 제거 */

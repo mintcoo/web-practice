@@ -22,4 +22,5 @@ urlpatterns = [
     path('', views.connect),
     path('articles/', include('articles.urls')),
     path('accounts/', include('accounts.urls')),
+    path('movies/', include('movies.urls')),
 ]

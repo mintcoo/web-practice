@@ -113,6 +113,18 @@ def detail(request, article_pk):
     article.save()
 
     comments = Comment.objects.filter(article_id=article_pk)
+    usernames = list(map(lambda x:x.username, comments))
+    # print('@@@',usernames)
+    profiles = Profile.objects.filter(username__in=usernames)
+    
+
+    for comment in comments:
+        # profiles이거안에 article.username이랑 profiles중의 profile.username이같은거 무족권있을꺼고
+        # 그걸 article.profile = profile 해서넣어준다는뜻 데이터베이스에 지정한 필드값들만 이렇게 끌고올수있는게 아니다!
+        for profile in profiles:
+            if profile.username == comment.username :
+                comment.profile = profile.icon_url
+
 
     context = {
         'article': article,
@@ -270,5 +282,4 @@ def icon_setting(request, icon_id):
         profile.icon_id = icon_id
         profile.icon_url = icon.url
         profile.save()
-        print(profile.icon_id)
         return redirect('articles:profile')

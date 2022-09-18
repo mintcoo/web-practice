@@ -6,6 +6,7 @@ from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
+        max_length= 16,
         label="",
         widget=forms.TextInput(attrs={
             "placeholder": "이름(한글 가능)",

@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-  <h1>Detail</h1>
+  <h1>{{ article.title }}</h1>
   <hr>
-  <section>
-    <div class="justify-space">
-      <h4>
-        {{ article.title }}</h4>
+  <section class="poorstory">
+    <div class="justify-end">
       <p>조회수:
         {{ article.count }}</p>
     </div>
-    <textarea maxlength="1000" class="textarea-content">
-      {{ article.content }}</textarea>
+    <div class="textarea-content">
+      {{ article.content }}</div>
     <p>
       작성시간 :{{ article.created_at }}</p>
     <p>
@@ -23,32 +21,37 @@
 
   </section>
   <hr>
-  {% for comment in comments reversed %}
+  <footer class="poorstory">
+    {% for comment in comments reversed %}
+      <div class="justify-start">
+        <img style="width: 20px; height: 20px; margin-right: 5px;" src="{% static comment.profile %}" alt="icon"/>
 
-    <p>
-      {{ comment.username}}
-      :
-      {{ comment.content }}</p>
-  {% endfor %}
+        <p>
+          {{ comment.username}}
+          :
+          {{ comment.content }}</p>
+      </div>
+    {% endfor %}
 
-  <form action="{% url 'articles:comment' article.pk %}" class="d-flex align-items-center" method="POST">
-    {% csrf_token %}
-    <label for="comment">댓글 &nbsp;
-    </label>
-    <textarea name="comment" id="comment" cols="100" rows="1" placeholder="여기에 댓글을 다세염"></textarea>
-    <button type="submit">댓글달기</button>
-  </form>
-  <hr>
-  <div class="d-flex justify-content-start">
-    <form action="{% url 'articles:update' article.pk %}">
-      <button>수정</button>
-    </form>
-    <form action="{% url 'articles:delete' article.pk %}" method="POST">
+    <form action="{% url 'articles:comment' article.pk %}" class="d-flex align-items-center" method="POST">
       {% csrf_token %}
-      <button>삭제</button>
+      <label for="comment">댓글 &nbsp;
+      </label>
+      <textarea name="comment" id="comment" cols="100" rows="1" placeholder="여기에 댓글을 다세염"></textarea>
+      <button type="submit">댓글달기</button>
     </form>
-    <a href="{% url 'articles:index' %}">Back</a>
-  </div>
+    <hr>
+    <div class="d-flex justify-content-start">
+      <form action="{% url 'articles:update' article.pk %}">
+        <button>수정</button>
+      </form>
+      <form action="{% url 'articles:delete' article.pk %}" method="POST">
+        {% csrf_token %}
+        <button>삭제</button>
+      </form>
+      <a href="{% url 'articles:index' %}">Back</a>
+    </div>
+  </footer>
   <!--modal-->
   <div class="modal fade" id="upcheck" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

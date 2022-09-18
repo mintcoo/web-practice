@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>MovieCreate</h1>
+  <div class="display-flex-center">
+    <div class="display-flex">
+      {% for movie in movies reversed %}
+        <div class="posterbox">
+          <div class="posterbox2">
+            <div class="imgbox">
+              <a href="{% url 'movies:detail' movie.pk %}">
+                <img src="{{ movie.poster_url }}" class="img-size" alt="{{ movie.pk }}"></a>
+            </div>
+            <div>
+              <div class="movie-titlebox cutefont2">제목:
+                {{ movie.title }}</div>
+              <div class="poorstory2">
+                <div>
+                  <p style=" margin: 0%;">평점:
+                    <span style="color: red;">{{ movie.score }}</span></p>
+                  <p style=" margin: 0%;">장르:
+                    {{ movie.genre }}</p>
+                </div>
+                <p class="movie-releasebox">출시:
+                  {{ movie.release_date|date:"Y.m.d" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <form action="{% url 'movies:create' %}">
+    <input class="poorstory2" type="submit" value="영화등록">
+  </form>
+
+  <a href="{% url 'articles:index' %}">
+    <button>뒤로가기</button>
+  </a>
+
+{% endblock content %}

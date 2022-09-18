@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/movie_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/test.css' %}">
 
     <title>사이트연습</title>
@@ -27,7 +28,7 @@
           </i>
           <span class="insta">| SSAFYstagram</span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
@@ -44,6 +45,9 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'articles:download' %}">PlayGround</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'movies:movies' %}">Movies</a>
+            </li>
           </ul>
           <ul class="navbar-nav ms-3 align-items-center">
             <li class="nav-item">
@@ -58,11 +62,6 @@
             </li>
             {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" style="padding: 0px;">
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-primary padzero ">회원탈퇴</button>
-                </a>
-              </li>
-              <li class="nav-item">
                 <form class="nav-link" action="{% url 'accounts:logout' %}" method="POST">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-outline-primary padzero">로그아웃</button>
@@ -71,6 +70,11 @@
               <li class="nav-item me-2">
                 <a class="nav-link" href="{% url 'accounts:update' %}" style="padding: 0px; ">
                   <button type="button" class="btn btn-outline-primary padzero">회원정보수정</button>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" style="padding: 0px; ">
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-primary padzero ">회원탈퇴</button>
                 </a>
               </li>
             {% else %}
