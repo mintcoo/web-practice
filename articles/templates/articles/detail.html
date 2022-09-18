@@ -1,43 +1,75 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-  <h1>{{ article.title }}</h1>
   <hr>
   <section class="poorstory">
-    <div class="justify-end">
-      <p>조회수:
-        {{ article.count }}</p>
-    </div>
+    <header class="header-all">
+      <div class="header-titlebox">
+        <div class="header-group">[{{ article.header }}]</div>
+        <div>{{ article.title }}</div>
+      </div>
+      <div class="header-box">
+        <div class="header-imagebox">
+          <img style="width: 100px; height: 100px; margin-right: 5px;" src="{% static profi.icon_url %}" alt="icon"/>
+        </div>
+        <div>
+          <div class="header-namebox">
+            <div>{{ article.username }}</div>
+          </div>
+          <div class="header-viewbox">
+            <div>포인트:
+              {{ user.point }}</div>
+            <div>조회:
+              {{ article.count }}</div>
+            <div>
+              작성:
+              {{ article.created_at|date:"y-m-d (m:s)" }}</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <div class="textarea-content">
       {{ article.content }}</div>
-    <p>
-      작성시간 :{{ article.created_at }}</p>
-    <p>
-      수정시간 :{{ article.updated_at }}</p>
 
-    <button type="button" data-bs-toggle="modal" data-bs-target="#upcheck">개추</button>
-    :
-    {{ article.up_count }}
-
+    <div class="justify-center">
+      <button class="upbox" type="button" data-bs-toggle="modal" data-bs-target="#upcheck">
+        <div>{{ article.up_count }}</div><img style="width: 30px;" src="{% static 'img/up.jpg' %}" alt="">
+      </button>
+    </div>
   </section>
   <hr>
   <footer class="poorstory">
-    {% for comment in comments reversed %}
-      <div class="justify-start">
-        <img style="width: 20px; height: 20px; margin-right: 5px;" src="{% static comment.profile %}" alt="icon"/>
-
-        <p>
-          {{ comment.username}}
-          :
-          {{ comment.content }}</p>
-      </div>
-    {% endfor %}
-
+    <div style="border-bottom: solid 1px burlywood;">
+      {% for comment in comments %}
+        <div class="justify-start comment-border">
+          <div class="justify-start comment-box">
+            <img style="width: 20px; height: 20px; margin-right: 5px;" src="{% static comment.profile %}" alt="icon"/>
+            {{ comment.username }}
+          </div>
+          <div class="comment-box2">
+            <div>{{ comment.content }}</div>
+            <div class="d-flex align-items-center">
+              <div class="comment-date">{{ comment.created_at }}</div>
+              <div>
+                <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+                  {% csrf_token %}
+                  <button style="padding: 0px; width: 15px; height: 15px; border: none; margin-right: 5px;" type="submit">
+                    <img style="width: 100%; height: 100%;" src="{% static 'img/x.png' %}" alt="xbutton"/>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
     <form action="{% url 'articles:comment' article.pk %}" class="d-flex align-items-center" method="POST">
       {% csrf_token %}
       <label for="comment">댓글 &nbsp;
       </label>
-      <textarea name="comment" id="comment" cols="100" rows="1" placeholder="여기에 댓글을 다세염"></textarea>
+      <textarea maxlength="50" name="comment" id="comment" cols="100" rows="1" placeholder="여기에 댓글을 다세염"></textarea>
       <button type="submit">댓글달기</button>
     </form>
     <hr>

@@ -15,8 +15,9 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('pointshop/', views.pointshop, name='pointshop'),
     path('<int:icon_id>/<int:icon_price>/buy/', views.icon_buy, name='icon_buy'),
-    path('profile', views.profile, name='profile'),
-    path('<int:icon_id>/icon_setting', views.icon_setting, name='icon_setting'),
+    path('profile/', views.profile, name='profile'),
+    path('<int:icon_id>/icon_setting/', views.icon_setting, name='icon_setting'),
+    path('<int:article_pk>/<int:comment_pk>/delete/', views.comment_delete, name='comment_delete'),
 
 
 

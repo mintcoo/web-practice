@@ -16,5 +16,9 @@
     <a href="{% url 'movies:movies' %}">
       <button>뒤로가기</button>
     </a>
+    <form action="{% url 'movies:delete' movie.pk %}" method="POST">
+      {% csrf_token %}
+      <button>삭제</button>
+    </form>
 
   {% endblock content %}

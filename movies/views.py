@@ -34,4 +34,13 @@ def detail(request, movie_pk):
     }
     return render(request, 'movies/detail.html', context)
 
+def delete(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            movie.delete()
+            return redirect('movies:movies')
+
+    return redirect('movies:detail', movie.pk)
+
         

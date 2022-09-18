@@ -11,7 +11,7 @@ class Article(models.Model):
     )
     header = models.CharField(max_length=2, choices=header_choices, default='기타')
     username = models.CharField(default='익명',max_length=50)
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=30)
     content = models.TextField()
     count = models.IntegerField(default=0)
     up_count = models.IntegerField(default=0)
