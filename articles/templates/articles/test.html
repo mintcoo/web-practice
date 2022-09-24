@@ -57,3 +57,35 @@
 # 차이구해줌 하루같은거 그거를 찾으면됨 이제 원리가 저렇게되는구나
 
 #이런식 와 이게또 이프문으로 처리가되네 와 이게 결합이 장난아니다 {% endcomment %}
+
+{% comment %} 
+# date_now = datetime.now()
+# print('@#$@#$@#$@#$$$', date_now)
+# time_now = int(time.time())
+# print('##########', time_now)
+
+for article in articles:
+    # article.test = article.날짜이쁘게(article.created_at)
+    article.title = article.욕필터(article.title)
+    # article_time = int(time.mktime(article.created_at.timetuple()))
+    # article.time_slice = time_now - article_time
+    # print('@@@@@@@@@@@@',article.time_slice)
+    print('@@@@@@@@@@@@', article.created_at)
+    
+
+    if article.comment_count == 0:
+        article.comment_count = ''          # 코멘트 0 이면 빈칸 
+    else:
+         article.comment_count = f' [{ article.comment_count }]'    
+
+# articles for문돌면서 거기에 profile꽂아주려함
+# 그럼 기존 html쪽 for문에서 article.profile.icon_url하믄대니까
+# print('aa',usernames)
+# d = int(time.time())
+# c = int(time.mktime(article.created_at.timetuple()))
+# print('@@@@@@@@@@@',time.time())
+# print('@@@@@@@@@@@',d)
+# print('@@@@@@@@@@@',c)
+# print('@@@@@@@@@@@',d - c)
+# print('@@@@@@@@@@@', article.created_at)
+# 86,400 = 하루 {% endcomment %}

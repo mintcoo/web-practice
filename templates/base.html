@@ -92,10 +92,6 @@
           </ul>
         </div>
       </nav>
-      <form action="{% url 'articles:search' %}">
-        <input class="searchinput" type="search" name="q">
-        <input class="searchbox" type="submit" value="검색">
-      </form>
 
       <div class="container">
         {% if request.user.is_authenticated %}

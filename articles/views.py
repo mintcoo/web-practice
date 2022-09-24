@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
-import articles
+from accounts.models import User
 from .forms import ArticleForm
 from .models import Article, Comment, Itembox, Upcheck, Usericon
 from .context_processors import Profile
+from datetime import datetime 
+import time
 interval = 1
 # Create your views here.
 def index(request):
@@ -23,15 +24,20 @@ def index(request):
     articles = Article.objects.all()[::-1]
     articles = articles[page_start:page_end]                    # 현재 페이지 사이즈 10개만큼 잘라서 렌더링해야함
 
+    time_now = int(time.time())                                 # 타임스탬프로 현재시간 받아오기
+  
     for article in articles:
         # article.test = article.날짜이쁘게(article.created_at)
         article.title = article.욕필터(article.title)
+        article_time = int(time.mktime(article.created_at.timetuple()))     # 게시글 작성시간을 타임스탬프화 
+        article.time_slice = time_now - article_time - 32400                # 중요!! 현재시간에서 작성시간 빼고 32400(시차)만큼 더빼준값을 만듬 (이 값으로 index페이지에서 사용)
+                                                                        
+
         if article.comment_count == 0:
             article.comment_count = ''          # 코멘트 0 이면 빈칸 
         else:
-             article.comment_count = f' [{ article.comment_count}]'    
+             article.comment_count = f' [{ article.comment_count }]'    
     
-
     # articles for문돌면서 거기에 profile꽂아주려함
     # 그럼 기존 html쪽 for문에서 article.profile.icon_url하믄대니까
     # print('aa',usernames)
@@ -42,6 +48,8 @@ def index(request):
 
     for popular in article_popular:
         popular.title = popular.욕필터(popular.title)
+        popular_time = int(time.mktime(popular.created_at.timetuple()))    
+        popular.time_slice = time_now - popular_time - 32400     
         if popular.comment_count == 0:
             popular.comment_count = ''
         else:
@@ -64,7 +72,7 @@ def index(request):
             if profile.username == article.username :
                 article.profile = profile.icon_url
 
-    for article in article_popular:                 # 이 부분 다시 이해가 필요
+    for article in article_popular:                 
         for pro in profiles2:
             if pro.username == article.username :
                 article.profile = pro.icon_url
@@ -109,9 +117,11 @@ def detail(request, article_pk):
     #기존
     #article.username = request.user
     # => 객체임
-
     article.count += 1
     article.save()
+    if article.username != '익명':
+        article_user = User.objects.get(username=article.username)
+        article.point = article_user.point
 
     comments = Comment.objects.filter(article_id=article_pk)
     usernames = list(map(lambda x:x.username, comments))

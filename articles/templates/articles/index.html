@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-  <h1>전체게시판</h1>
+  <div class="header-search">
+    <h1>전체게시판</h1>
+    <form action="{% url 'articles:search' %}">
+      <input class="searchinput" type="search" name="q">
+      <input class="searchbox" type="submit" value="검색">
+    </form>
+  </div>
   <section>
     <div class="oneline-head">
       <cell>
@@ -14,7 +19,7 @@
       <div class="divtitle">
         내용
       </div>
-      <cell>
+      <cell style="margin-left: 20px;">
         글쓴이
       </cell>
       <cell2>
@@ -23,9 +28,10 @@
       <cell2>
         조회
       </cell2>
-      <cell2>
+      <datecell>
         날짜
-      </cell2>
+        {{ time.time }}
+      </datecell>
     </div>
     {% for popular in article_popular %}
       <div class="oneline-popluar">
@@ -48,9 +54,15 @@
           {{ popular.up_count }}</cell2>
         <cell2>
           {{ popular.count }}</cell2>
-        <div>
-          {{ popular.created_at|date:"y-m-d m:s" }}
-        </div>
+        {% if popular.time_slice <= 86400 %}
+          <datecell>
+            {{ popular.created_at|date:"h:i" }}
+          </datecell>
+        {% else %}
+          <datecell>
+            {{ popular.created_at|date:"y-m-d" }}
+          </datecell>
+        {% endif %}
       </div>
     {% endfor %}
     {% for article in articles %}
@@ -74,9 +86,15 @@
           {{ article.up_count }}</cell2>
         <cell2>
           {{ article.count }}</cell2>
-        <div>
-          {{ article.created_at|date:"y-m-d m:s" }}
-        </div>
+        {% if article.time_slice <= 86400 %}
+          <datecell>
+            {{ article.created_at|date:"h:i" }}
+          </datecell>
+        {% else %}
+          <datecell>
+            {{ article.created_at|date:"y-m-d" }}
+          </datecell>
+        {% endif %}
       </div>
     {% endfor %}
     <footer class="oneline-page">

@@ -17,6 +17,9 @@
 h1 {
   font-family: 'Cute Font';
   font-size: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 .blaka {
   font-family: 'Blaka Ink', cursive;
@@ -134,18 +137,37 @@ h1 {
 }
 
 cell {
-  width: 125px;
+  width: 135px;
   padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 cell2{
   width: 70px;
   padding-left: 10px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
+
+datecell {
+  width: 145px;
+  padding-left: 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
 
 .divtitle {
   width: 570px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 
@@ -170,6 +192,7 @@ a:hover {
   border-radius: 50px;
   border:solid 1px skyblue;
   outline: none;
+  
 }
 
 .searchinput:hover {
@@ -321,6 +344,12 @@ a:hover {
   display: flex;
   flex-direction: column;
 }
+
+.header-search {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+
+
 
 /* .header-all {
   border: dotted 1px powderblue;
