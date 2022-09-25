@@ -38,14 +38,14 @@
                 point
               </div>
               <div class="d-flex justify-content-end">
-                {% if user.point >= icon.price %}
+                {% if icon.icon_id in useritems %}
+                  <button type="button" class="purchasebox" data-bs-dismiss="modal">이미보유중</button>
+                {% elif user.point >= icon.price %}
                   <form action="{% url 'articles:icon_buy' icon.icon_id icon.price %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="purchasebox">구매하기</button>
                   </form>
                   <button type="button" class="purchasebox" data-bs-dismiss="modal">안살래</button>
-                {% elif icon.icon_id in useritems %}
-                  <button type="button" class="purchasebox" data-bs-dismiss="modal">이미보유중</button>
                 {% elif user.point < icon.price %}
                   <button type="button" class="purchasebox" data-bs-dismiss="modal">포인트부족ㅋ</button>
                 {% endif %}
@@ -57,7 +57,58 @@
     {% endif %}
   {% endfor %}
   <hr>
+  <h2 class="shopbox blaka">Color Shop</h2>
+  {% for col, price in color_list.items %}
+    <button type="button" data-bs-toggle="modal" data-bs-target="#iconmodal{{ col }}" class="btn btn-outline-primary padzero ">
+      <div class="colorbox" style="background-color: {{ col }};"></div>
+    </button>
 
+    <div class="modal fade" id="iconmodal{{ col }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="justify-evenly">
+            <div>
+              <h5 class="modal-title" id="exampleModalLabel">
+                <span style="color: {{ col }}; font-weight: bold;">{{ col }}</span>
+              </h5>
+            </div>
+          </div>
+          <hr>
+          <div class="modal-body justify-evenly">
+            <div class="colorbox" style="background-color: {{ col }};"></div>
+            <div class="cutefont">가격 :
+              {{ price }}
+              point
+            </div>
+          </div>
+          <div class="modal-footer justify-space">
+            <div>
+              보유 :
+              {{ user.point }}
+              point
+            </div>
+            <div class="d-flex justify-content-end">
+              {% if col in usercolors %}
+                <button type="button" class="purchasebox" data-bs-dismiss="modal">이미보유중</button>
+              {% elif user.point >= price %}
+                <form action="{% url 'articles:color_buy' col price %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="purchasebox">구매하기</button>
+                </form>
+                <button type="button" class="purchasebox" data-bs-dismiss="modal">안살래</button>
+              {% elif user.point < price %}
+                <button type="button" class="purchasebox" data-bs-dismiss="modal">포인트부족ㅋ</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <hr>
   <a href="{% url 'articles:index' %}">돌아가기</a>
 
 {% endblock content %}

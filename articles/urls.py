@@ -18,6 +18,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('<int:icon_id>/icon_setting/', views.icon_setting, name='icon_setting'),
     path('<int:article_pk>/<int:comment_pk>/delete/', views.comment_delete, name='comment_delete'),
+    path('<str:color_name>/<int:color_price>/buy/', views.color_buy, name='color_buy'),
+    path('<str:color_name>/color_setting/username', views.color_username, name='color_username'),
+    path('<str:color_name>/color_setting/title', views.color_title, name='color_title'),
 
 
 

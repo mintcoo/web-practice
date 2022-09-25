@@ -4,46 +4,91 @@
 {% block content %}
   <h1>Profile</h1>
   <hr>
-  {% for icon in iconlist %}
-    <div>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#iconsetting{{ icon.icon_id }}" class="btn btn-outline-primary padzero ">
-        <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/></button>
-    </div>
+  <h3 class="cutefont">보유 아이콘</h3>
+  <div class="justify-start">
+    {% for icon in iconlist %}
+      <div style="margin: 5px;">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#iconsetting{{ icon.icon_id }}" class="btn btn-outline-primary padzero ">
+          <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/></button>
+      </div>
 
-    <div class="modal fade" id="iconsetting{{ icon.icon_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="d-flex justify-content-end">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="justify-evenly">
-            <div>
-              <h5 class="modal-title" id="exampleModalLabel">
-                아이콘 장착할래?
-              </h5>
-            </div>
-          </div>
-          <hr>
-          <div class="modal-body justify-evenly">
-            <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/>
-            <div class="cutefont">
-              {{ icon.price }}
-
-            </div>
-          </div>
-          <div class="modal-footer justify-space">
+      <div class="modal fade" id="iconsetting{{ icon.icon_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
             <div class="d-flex justify-content-end">
-              <form action="{% url 'articles:icon_setting' icon.icon_id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="purchasebox">그랭</button>
-              </form>
-              <button type="button" class="purchasebox" data-bs-dismiss="modal">시러</button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="justify-evenly">
+              <div>
+                <h5 class="modal-title" id="exampleModalLabel">
+                  아이콘 장착할래?
+                </h5>
+              </div>
+            </div>
+            <hr>
+            <div class="modal-body justify-evenly">
+              <img style="width: 50px; height: 50px;" src="{% static icon.url %}" alt="icon"/>
+            </div>
+            <div class="modal-footer justify-space">
+              <div class="d-flex justify-content-end">
+                <form action="{% url 'articles:icon_setting' icon.icon_id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="purchasebox">그랭</button>
+                </form>
+                <button type="button" class="purchasebox" data-bs-dismiss="modal">시러</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-  {% endfor %}
+    {% endfor %}
+  </div>
+  <hr>
+  <h3 class="cutefont">보유 칼라</h3>
+  <div class="justify-start">
+    {% for col in colorlist %}
+      <div style="margin: 5px;">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#iconsetting{{ col.color }}" class="btn btn-outline-primary padzero ">
+          <div class="colorbox" style="background-color: {{ col.color }};"></div>
+        </button>
+      </div>
 
+      <div class="modal fade" id="iconsetting{{ col.color }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="d-flex justify-content-end">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="justify-evenly">
+              <div>
+                <h5 class="modal-title" id="exampleModalLabel">
+                  <span style="color: {{ col.color }}; font-weight: bold;">{{ col.color }}
+                  </span>세팅할래?
+                </h5>
+              </div>
+            </div>
+            <hr>
+            <div class="modal-body justify-evenly">
+              <div class="colorbox" style="background-color: {{ col.color }};"></div>
+            </div>
+            <div class="modal-footer justify-space">
+              <div class="d-flex justify-content-end">
+                <form action="{% url 'articles:color_username' col.color %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="purchasebox">아이디 색변경</button>
+                </form>
+                <form action="{% url 'articles:color_title' col.color %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="purchasebox">게시글 색변경</button>
+                </form>
+                <button type="button" class="purchasebox" data-bs-dismiss="modal">시러</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% endfor %}
+  </div>
 {% endblock content %}

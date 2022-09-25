@@ -41,22 +41,22 @@
         <cell>
           {{ popular.header }}
         </cell>
-        <div class="divtitle">
+        <div style="color: {{ popular.title_color }};" class="divtitle">
           <a href="{% url 'articles:detail' popular.pk %}">
             {{ popular.title }}
             {{ popular.comment_count }}
           </div>
         </a>
         <img style="width: 20px; height: 20px;" src="{% static popular.profile %}" alt="icon"/>
-        <cell>
+        <cell style="color: {{ popular.id_color }};">
           {{ popular.username }}</cell>
         <cell2>
           {{ popular.up_count }}</cell2>
         <cell2>
           {{ popular.count }}</cell2>
-        {% if popular.time_slice <= 86400 %}
+        {% if popular.time_slice >= 0 %}
           <datecell>
-            {{ popular.created_at|date:"h:i" }}
+            {{ popular.created_at|date:"H:i" }}
           </datecell>
         {% else %}
           <datecell>
@@ -73,22 +73,22 @@
         <cell>
           {{ article.header }}
         </cell>
-        <div class="divtitle">
+        <div style="color: {{ article.title_color }};" class="divtitle">
           <a href="{% url 'articles:detail' article.pk %}">
             {{ article.title }}
             {{ article.comment_count }}
           </div>
         </a>
         <img style="width: 20px; height: 20px;" src="{% static article.profile %}" alt="icon"/>
-        <cell>
+        <cell style="color: {{ article.id_color }};">
           {{ article.username }}</cell>
         <cell2>
           {{ article.up_count }}</cell2>
         <cell2>
           {{ article.count }}</cell2>
-        {% if article.time_slice <= 86400 %}
+        {% if article.time_slice >= 0 %}
           <datecell>
-            {{ article.created_at|date:"h:i" }}
+            {{ article.created_at|date:"H:i" }}
           </datecell>
         {% else %}
           <datecell>

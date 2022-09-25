@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
 from .forms import ArticleForm
-from .models import Article, Comment, Itembox, Upcheck, Usericon
+from .models import Article, Comment, Itembox, Upcheck, Usericon, Colorbox
 from .context_processors import Profile
 from datetime import datetime 
 import time
@@ -24,14 +24,14 @@ def index(request):
     articles = Article.objects.all()[::-1]
     articles = articles[page_start:page_end]                    # 현재 페이지 사이즈 10개만큼 잘라서 렌더링해야함
 
-    time_now = int(time.time())                                 # 타임스탬프로 현재시간 받아오기
-  
+    time_now = int(time.mktime(datetime.now().date().timetuple()))      # 중요!! 현재시간의 현재날짜 00시 기준의 값을 타임스탬프로 받아와야함!
+
     for article in articles:
         # article.test = article.날짜이쁘게(article.created_at)
         article.title = article.욕필터(article.title)
-        article_time = int(time.mktime(article.created_at.timetuple()))     # 게시글 작성시간을 타임스탬프화 
-        article.time_slice = time_now - article_time - 32400                # 중요!! 현재시간에서 작성시간 빼고 32400(시차)만큼 더빼준값을 만듬 (이 값으로 index페이지에서 사용)
-                                                                        
+        article_time = int(time.mktime(article.created_at.timetuple()))     # 게시글 작성시간을 타임스탬프화 시키고
+        article.time_slice = article_time - time_now + 32400                # 중요!! 오늘날짜 00시 기준값에서 작성시간 빼고 32400(시차)만큼 더해준값 음수면 넘어가게..(이 값으로 index페이지에서 사용)
+        # print('@@@@@@', article.time_slice)                                                                        
 
         if article.comment_count == 0:
             article.comment_count = ''          # 코멘트 0 이면 빈칸 
@@ -49,7 +49,7 @@ def index(request):
     for popular in article_popular:
         popular.title = popular.욕필터(popular.title)
         popular_time = int(time.mktime(popular.created_at.timetuple()))    
-        popular.time_slice = time_now - popular_time - 32400     
+        popular.time_slice = popular_time - time_now + 32400     
         if popular.comment_count == 0:
             popular.comment_count = ''
         else:
@@ -71,11 +71,15 @@ def index(request):
         for profile in profiles:
             if profile.username == article.username :
                 article.profile = profile.icon_url
+                article.id_color = profile.id_color
+                article.title_color = profile.title_color
 
     for article in article_popular:                 
         for pro in profiles2:
             if pro.username == article.username :
                 article.profile = pro.icon_url
+                article.id_color = pro.id_color
+                article.title_color = pro.title_color
 
     context ={
         'articles': articles,
@@ -135,6 +139,8 @@ def detail(request, article_pk):
         for profile in profiles:
             if profile.username == comment.username :
                 comment.profile = profile.icon_url
+                comment.name_color = profile.id_color
+                comment.title_color = profile.title_color
 
 
     context = {
@@ -259,11 +265,20 @@ def search(request):
 def pointshop(request):
     icons = Usericon.objects.all().order_by('price')
     itembox = Itembox.objects.filter(username=request.user.username)
+    colorbox = Colorbox.objects.filter(username=request.user.username)
     user_icon_id = list(map(lambda x:x.icon_id, itembox))
+    user_color = list(map(lambda x:x.color, colorbox))
 
+    color_list = {'Black': 1000, 'Red': 1000, 'Blue': 1000, 'Green': 1000, 'Grey': 1500, 'Purple': 1500, 'Gold': 1500, 'Fuchsia': 2000, 'Maroon': 2500,
+    'Lime': 2500, 'Navy': 2500, 'Chocolate': 2500, 'Slateblue': 3000, 'Teal': 3000, 'Skyblue': 4000, 'Pink': 4000, 'Cornflowerblue': 5000, 'Crimson': 5000, 'Steelblue': 5000,
+    'Lavender': 7000, 'Snow': 7777,
+    }
+    
     context = {
         'icons': icons,
         'useritems': user_icon_id,
+        'color_list': color_list,
+        'usercolors': user_color,
     }
 
     return render (request, 'articles/pointshop.html', context)
@@ -283,16 +298,33 @@ def icon_buy(request, icon_id, icon_price):
     return redirect('articles:pointshop')
 
 @login_required
+def color_buy(request, color_name, color_price):
+    if request.method == 'POST':
+        request.user.point -= color_price
+        request.user.save()
+        colorbox = Colorbox()
+        colorbox.username = request.user.username
+        colorbox.color = color_name
+        colorbox.save()
+        return redirect('articles:pointshop')
+    else:
+        print('POST 요청아님')
+    return redirect('articles:pointshop')
+
+@login_required
 def profile(request):
     icons = Usericon.objects.all()
     itembox = Itembox.objects.filter(username=request.user.username)
+    colorbox = Colorbox.objects.filter(username=request.user.username)
     # user_icon_list = list(map(lambda x:x.icon_id, itembox))
     for icon in icons:
         for item in itembox:
             if item.icon_id == icon.icon_id:
                 item.url = icon.url
+    
     context = {
         'iconlist': itembox,
+        'colorlist': colorbox,
     }
 
     return render(request, 'articles/profile.html', context)
@@ -306,3 +338,26 @@ def icon_setting(request, icon_id):
         profile.icon_url = icon.url
         profile.save()
         return redirect('articles:profile')
+    else:
+        return redirect('articles:profile')
+
+@login_required
+def color_username(request, color_name):
+    if request.method == 'POST':
+        profile = Profile.objects.get(username=request.user.username)
+        profile.id_color = color_name
+        profile.save()
+        return redirect('articles:profile')
+    else:
+        return redirect('articles:profile')
+
+@login_required
+def color_title(request, color_name):
+    if request.method == 'POST':
+        profile = Profile.objects.get(username=request.user.username)
+        profile.title_color = color_name
+        profile.save()
+        return redirect('articles:profile')
+    else:
+        return redirect('articles:profile')
+

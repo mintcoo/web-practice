@@ -49,8 +49,13 @@ class Profile(models.Model):
     username = models.CharField(max_length=50)
     icon_id = models.IntegerField(default=0)
     icon_url = models.TextField(default='icon/gunbbang.png')
+    id_color = models.TextField(default='black')
+    title_color = models.TextField(default='black')
 
 class Itembox(models.Model):
     username = models.CharField(max_length=50)
     icon_id = models.IntegerField(default=0)
-
+    
+class Colorbox(models.Model):
+    username = models.CharField(max_length=50)
+    color =  models.TextField(default='black')

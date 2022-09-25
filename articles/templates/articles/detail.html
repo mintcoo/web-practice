@@ -23,7 +23,7 @@
               {{ article.count }}</div>
             <div>
               작성:
-              {{ article.created_at|date:"y-m-d (h:i)" }}</div>
+              {{ article.created_at|date:"y-m-d (H:i)" }}</div>
           </div>
         </div>
       </div>
@@ -45,10 +45,10 @@
         <div class="justify-start comment-border">
           <div class="justify-start comment-box">
             <img style="width: 20px; height: 20px; margin-right: 5px;" src="{% static comment.profile %}" alt="icon"/>
-            {{ comment.username }}
+            <span style="color: {{ comment.name_color }};">{{ comment.username }}</span>
           </div>
           <div class="comment-box2">
-            <div>{{ comment.content }}</div>
+            <div style="color: {{ comment.title_color }};">{{ comment.content }}</div>
             <div class="d-flex align-items-center">
               <div class="comment-date">{{ comment.created_at }}</div>
               <div>

@@ -349,7 +349,11 @@ a:hover {
   display: flex; justify-content: space-between; align-items: baseline;
 }
 
-
+.colorbox {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+}
 
 /* .header-all {
   border: dotted 1px powderblue;
