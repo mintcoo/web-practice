@@ -171,7 +171,7 @@ def update(request, article_pk):
     else:
         form = ArticleForm(instance=article)
     context = {
-        'article': article, # 이걸줘야 article.pk를 edit페이지에서 씀
+        'article': article, # 이걸줘야 article.pk를 edit페이지에서 씀!!
         'form': form,
     }
     return render(request, 'articles/update.html', context)

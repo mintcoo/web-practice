@@ -29,10 +29,11 @@ def logout(request):
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        profile = Profile()
         if form.is_valid():
-            form.save()
-            profile.username = request.user.username
+            create_user = form.save(commit=False)
+            create_user.save()
+            profile = Profile()
+            profile.username = create_user.username
             profile.save()
             return redirect('articles:index')
     else:
