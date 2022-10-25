@@ -1,4 +1,6 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
 from .forms import ArticleForm
@@ -7,6 +9,92 @@ from .context_processors import Profile
 from datetime import datetime 
 import time
 interval = 1
+
+def get_page(request):
+    global interval
+    page = int(request.GET.get('page', 1))                      # 요청 페이지를 받아올때 인트값으로, 디폴트 1
+    page_size = 10                                              # 보여줄 페이지의 개수
+    page_end = page * page_size                                 # 아래에서 게시글을 페이지개수만큼 자를 변수
+    page_start = page_end - page_size
+    paginations = (len(Article.objects.all()) // page_size) +1  # 모든 게시글개수를 페이지 사이즈만큼 나누고 +1 만큼 페이지네이션 생성 
+    paginations_size = 3                                        # 페이지네이션 사이즈 (html에도 값 바꿔주어야함)
+    if page <= paginations_size:                                # 페이지네이션 사이즈 처리 구간 첫 1,2,3 구간일때
+        interval = 1                                            
+    if page != 1 and page % paginations_size == 1:              # 페이지가 1이아니고 페이지네이션 사이즈로 나눈 나머지 1일때 (즉 현재설정으론 4페이지)
+        interval = page                                         # 글로벌 interval을 page값으로 할당 (아래에 range범위 바꿔서 다시 렌더링 해야함)
+    # print('&&$$$$$$$$$$$$$$$$',paginations)
+    articles = Article.objects.all()[::-1]
+    articles = articles[page_start:page_end]                    # 현재 페이지 사이즈 10개만큼 잘라서 렌더링해야함
+
+    time_now = int(time.mktime(datetime.now().date().timetuple()))      # 중요!! 현재시간의 현재날짜 00시 기준의 값을 타임스탬프로 받아와야함!
+
+    for article in articles:
+        # article.test = article.날짜이쁘게(article.created_at)
+        article.title = article.욕필터(article.title)
+        article_time = int(time.mktime(article.created_at.timetuple()))     # 게시글 작성시간을 타임스탬프화 시키고
+        article.time_slice = article_time - time_now + 32400                # 중요!! 오늘날짜 00시 기준값에서 작성시간 빼고 32400(시차)만큼 더해준값 음수면 넘어가게..(이 값으로 index페이지에서 사용)
+        # print('@@@@@@', article.time_slice)                                                                        
+
+        if article.comment_count == 0:
+            article.comment_count = ''          # 코멘트 0 이면 빈칸 
+        else:
+             article.comment_count = f' [{ article.comment_count }]'    
+    
+    # articles for문돌면서 거기에 profile꽂아주려함
+    # 그럼 기존 html쪽 for문에서 article.profile.icon_url하믄대니까
+    # print('aa',usernames)
+
+
+    # 인기글 정렬하는거 order_by를 통해 정렬 '-'을 통해 많은순
+    article_popular = Article.objects.all().order_by('-up_count')[:3]  
+
+    for popular in article_popular:
+        popular.title = popular.욕필터(popular.title)
+        popular_time = int(time.mktime(popular.created_at.timetuple()))    
+        popular.time_slice = popular_time - time_now + 32400     
+        if popular.comment_count == 0:
+            popular.comment_count = ''
+        else:
+             popular.comment_count = f' [{ popular.comment_count}]'
+
+    #lambda쓰는거조금씩이제 해보자!!
+    usernames = list(map(lambda x:x.username, articles))
+    usernames2 = list(map(lambda x:x.username, article_popular))
+    # print('@@@',usernames)
+    # print('@@@',usernames2)
+    # 여기서 usernames로 profile끌어오면 profiles들어잇고
+    profiles = Profile.objects.filter(username__in=usernames)
+    profiles2 = Profile.objects.filter(username__in=usernames2)
+    
+
+    for article in articles:
+        # profiles이거안에 article.username이랑 profiles중의 profile.username이같은거 무족권있을꺼고
+        # 그걸 article.profile = profile 해서넣어준다는뜻 데이터베이스에 지정한 필드값들만 이렇게 끌고올수있는게 아니다!
+        for profile in profiles:
+            if profile.username == article.username :
+                article.profile = profile.icon_url
+                article.id_color = profile.id_color
+                article.title_color = profile.title_color
+
+    for article in article_popular:                 
+        for pro in profiles2:
+            if pro.username == article.username :
+                article.profile = pro.icon_url
+                article.id_color = pro.id_color
+                article.title_color = pro.title_color
+
+    context ={
+        'articles': articles,
+        'article_popular': article_popular,
+        'range': range(interval, paginations + 1),                      # 여기 range를 전달함으로써 구간만큼 페이지네이션 버튼 생성
+        'interval': interval,
+        'interval_2': interval + paginations_size,
+        'paginations_size': paginations_size,
+    }
+    context = serializers.serialize("json", articles)
+    return HttpResponse(context, content_type='application/json')
+    #return JsonResponse(context,safe=False)
+
 # Create your views here.
 def index(request):
     global interval
@@ -88,7 +176,6 @@ def index(request):
         'interval': interval,
         'interval_2': interval + paginations_size,
         'paginations_size': paginations_size,
-
     }
     
     return render(request, 'articles/index.html', context)

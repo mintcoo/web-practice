@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+      async function getData(id) {
+        //response promise
+
+        //XMLHTTPRequest 이게 원리가되는 코어 함수
+        //이걸 이용해서 fetch를 만듬
+        //요청 쉽게했는데
+        //받아온거를 fetch는 뭘 더섞은거야
+        //responsePromise.status() .aa .ff .bb. . ddd
+        const responsePromise = await fetch('http://localhost:8000/articles/page?page=' + id);
+        return responsePromise.json();
+      }
+
+      /////////////////////
+      (async () => {
+        const data = await getData(1);
+        const data2 = await getData(2);
+        console.log(data);
+        console.log(data2);
+
+        const bodyTag = document.querySelector('body')
+        const divTag = document.createElement('div')
+        bodyTag.append(divTag)
+        //string만 보여주는거임.. 그래서 json은 안보이는..
+        //json->string처럼 보여주려니까 [object Object]
+        //그럼 안에껄 string처럼 풀어버리려면 JSON.stringify(data)
+        //divTag.innerText = JSON.stringify(data)
+        console.log(JSON.stringify(data))
+
+        function getArticleElement(data) {
+          const articleElement = document.createElement('div');
+          articleElement.innerHTML = `
+          <div class='article'>
+            <div class='id'>1</div>
+            <div class='content'>2</div>
+          </div>
+          `;
+
+          articleElement
+            .querySelector('.id')
+            .innerText = data.fields.title;
+
+          return articleElement;
+        }
+
+        data.forEach((datum) => {
+          const element = getArticleElement(datum);
+          document
+            .querySelector('.articles')
+            .append(element);
+        })
+
+      })();
+    </script>
+    <style>
+      .article {
+        display: flex;
+        border: solid 1px black;
+        border-bottom: none;
+      }
+
+      .article .id {
+        color: blue;
+        min-width: 50px;
+      }
+
+      .article .content {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='articles'>
+
+      <!-- <div class='article'> <div class='id'>1</div> <div class='content'>2</div> </div> <div class='article'> <div class='id'>1</div> <div class='content'>2</div> </div> -->
+    </div>
+  </body>
+
+</html>

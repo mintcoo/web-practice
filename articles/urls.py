@@ -1,9 +1,36 @@
+from django.http import JsonResponse
 from django.urls import path
 from . import views
 
 app_name = 'articles'
+
+def data1(request):
+    data = {
+        "name": "1",
+        "level": 10,
+        "url":"https://www.koreaminecraft.net/files/attach/images/21283/212/699/11167c822299f03f6f86ffd1ff4f5e3c.png",
+        "item": ["검", "방패" ]
+    }
+    return JsonResponse(data)
+
+def data2(request):
+    data = {
+        "name": "2",
+        "level": 20,
+        "url":"https://pixelart.pe.kr/data/editor/2109/afda73261b1d6e9b9d975acb9cedf366_1631624938_7116.png",
+        "item": ["창", "검"]
+    }
+    return JsonResponse(data)
+
 urlpatterns = [
     path('', views.index, name='index'),
+
+    # Rest
+    path('data1',data1),
+    path('data2',data2),
+    path('page',views.get_page),
+
+
     # path('new/', views.new, name='new'),
     path('create/', views.create, name='create'),
     path('<int:article_pk>', views.detail, name='detail'),
